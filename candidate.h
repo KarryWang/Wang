@@ -5,10 +5,10 @@
 using namespace std;
 class Candidate{
 public:
-	Candidate(string name);
+	Candidate(string candidate_id, string candidate_name);
 	Candidate();
 private: 
-	int id;
+	string id;
 	string name;
 };
 #endif
