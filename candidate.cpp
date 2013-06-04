@@ -1,21 +1,24 @@
 #include"candidate.h"
+#include"control.h"
 #include<ctime>
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-#include<mysql.h>
 const int kSqlStatementLength = 1000;
-extern MYSQL *conn;
 
-Candidate::Candidate(string candidate_id, string candidate_name)
+Candidate::Candidate()
+{
+}
+Candidate::Candidate(string candidate_id, string candidate_name, MYSQL *conn)
 {
 	id = candidate_id;
 	name = candidate_name;
 
-	char sql[kSqlStatementLength];
-	char char_name[kSqlStatementLength];
-	char char_id[kSqlStatementLength];
+	char sql[kSqlStatementLength];//a temp char array of sql statement
+	char char_name[kSqlStatementLength];// a temp char array to save name
+	char char_id[kSqlStatementLength];//a temp char array to save id
 	int i = 0;
+
 	memset(sql, 0, sizeof(sql));
 	memset(char_name, 0, sizeof(char_name));
 	memset(char_id, 0, sizeof(char_id));
@@ -30,6 +33,10 @@ Candidate::Candidate(string candidate_id, string candidate_name)
 	sprintf(sql, "insert into candidate values('%s', '%s')", char_id, char_name);
 	cout << sql << endl;
 
+	if(mysql_query(conn, sql)){
+		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+		exit(false);
+	}
 //	srand((unsigned)time(NULL));//make a new id for candidate
 //	id = rand() % MAX_CANDIDATE_ID;
 //	cout << id << endl;
@@ -43,5 +50,9 @@ Candidate::Candidate(string candidate_id, string candidate_name)
 //		sql[i++] = ch;
 //	}
 //	sprintf(sql, "insert into candidate values ('%s', %d)", name, id);
-	cout << "sql" << sql << endl;
+}
+
+Candidate::Candidate(string candidate_id, MYSQL *conn)
+{
+
 }
