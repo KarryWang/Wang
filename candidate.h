@@ -10,7 +10,6 @@ class Candidate{
 public:
 	Candidate(string candidate_id, string candidate_name, MYSQL *conn);
 	Candidate(string candidate_id, MYSQL *conn);
-	Candidate();
 private: 
 	string id;
 	string name;

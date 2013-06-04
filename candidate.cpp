@@ -1,22 +1,21 @@
-#include"candidate.h"
-#include"control.h"
 #include<ctime>
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-const int kSqlStatementLength = 1000;
+#include"candidate.h"
+#include"control.h"
 
-Candidate::Candidate()
-{
-}
+const int kSqlStatementLength = 1000;
+const int kCharArrayLength = 100;
+
 Candidate::Candidate(string candidate_id, string candidate_name, MYSQL *conn)
 {
 	id = candidate_id;
 	name = candidate_name;
 
 	char sql[kSqlStatementLength];//a temp char array of sql statement
-	char char_name[kSqlStatementLength];// a temp char array to save name
-	char char_id[kSqlStatementLength];//a temp char array to save id
+	char char_name[kCharArrayLength];// a temp char array to save name
+	char char_id[kCharArrayLength];//a temp char array to save id
 	int i = 0;
 
 	memset(sql, 0, sizeof(sql));
@@ -54,5 +53,34 @@ Candidate::Candidate(string candidate_id, string candidate_name, MYSQL *conn)
 
 Candidate::Candidate(string candidate_id, MYSQL *conn)
 {
+	id = candidate_id;
+
+	char sql[kSqlStatementLength];
+	char char_id[kCharArrayLength];
+	int i = 0;
+	memset(char_id, 0, sizeof(char_id));
+	for(string::iterator it = id.begin(); it != id.end(); it++)
+		char_id[i++] = *it;
+	sprintf(sql, "select * from candidate where id = '%s'", char_id);
+
+	MYSQL_RES *result;
+	if(mysql_query(conn, sql)){
+		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+		exit(false);
+	}
+	result = mysql_store_result(conn);
+	if(result == NULL){//
+		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+		exit(false);
+	}
+	int field_num;
+	field_num = mysql_num_fields(result);
+	if(field_num == 0){
+	}
+	MYSQL_ROW row;
+	row = mysql_fetch_row(result);
+	id = row[0];
+	name = row[1];
+	cout << "id: " << id << "name: " << name << endl;
 
 }

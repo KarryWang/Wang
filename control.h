@@ -1,9 +1,10 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 #include<mysql.h>
-#include"candidate.h"
 #include<cstdlib>
 #include<iostream>
+#include"candidate.h"
+
 using namespace std;
 
 
@@ -18,11 +19,6 @@ public:
 		}
 		cout << "JJJJ" << endl;
 	}
-	void input_sign_info()
-	{
-		cout << "input candidate ID and name: " << endl;
-		cin >> candidate_id >> candidate_name;
-	}
 	void input_candidate_info()
 	{
 		cout << "input candidate info:" << endl;
@@ -32,6 +28,16 @@ public:
 	{
 		input_candidate_info();
 		Candidate can(candidate_id, candidate_name, conn);
+	}
+	void input_candidate_id()
+	{
+		cout << "input candidate id: " << endl;
+		cin >> candidate_id;
+	}
+	void restore_candidate()
+	{
+		input_candidate_id();
+		Candidate can(candidate_id, conn);
 	}
 	~Control()
 	{
