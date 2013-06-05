@@ -9,7 +9,7 @@ const int kSqlStatementLength = 1000;
 const int kCharArrayLength = 100;
 
 //ok
-Candidate::Candidate(string candidate_name, MYSQL *conn)
+Candidate::Candidate(string candidate_name, MYSQL *mysql)
 {
 	while(1){
 		srand((unsigned)time(NULL));//make a new id for candidate
@@ -19,12 +19,12 @@ Candidate::Candidate(string candidate_name, MYSQL *conn)
 		char sql[kSqlStatementLength];
 		memset(sql, 0, sizeof(sql));
 		sprintf(sql, "select * from candidate where id = '%d'", id);
-		if(mysql_query(conn, sql)){
-			cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+		if(mysql_query(mysql, sql)){
+			cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 			exit(false);
 		}
 
-		MYSQL_RES *result = mysql_store_result(conn);
+		MYSQL_RES *result = mysql_store_result(mysql);
 		if(mysql_field_count(result) == 0)
 			break;
 	}
@@ -50,8 +50,8 @@ Candidate::Candidate(string candidate_name, MYSQL *conn)
 	sprintf(sql, "insert into candidate values('%s', '%s')", char_id, char_name);
 	cout << sql << endl;
 
-	if(mysql_query(conn, sql)){
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+	if(mysql_query(mysql, sql)){
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 //	srand((unsigned)time(NULL));//make a new id for candidate
@@ -70,7 +70,7 @@ Candidate::Candidate(string candidate_name, MYSQL *conn)
 }
 
 //ok
-Candidate::Candidate(string candidate_id, MYSQL *conn)
+Candidate::Candidate(string candidate_id, MYSQL *mysql)
 {
 	id = candidate_id;
 
@@ -84,14 +84,14 @@ Candidate::Candidate(string candidate_id, MYSQL *conn)
 	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "select * from candidate where id = '%s'", char_id);
 
-	if(mysql_query(conn, sql)){
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+	if(mysql_query(mysql, sql)){
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 	MYSQL_RES *result;
-	result = mysql_store_result(conn);
+	result = mysql_store_result(mysql);
 	if(result == NULL){//
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 	int field_num;
@@ -105,7 +105,7 @@ Candidate::Candidate(string candidate_id, MYSQL *conn)
 	cout << "id: " << id << "name: " << name << endl;
 }
 
-void Candidate::ModifyInfo(string candidate_name, MYSQL *conn)
+void Candidate::ModifyInfo(string candidate_name, MYSQL *mysql)
 {
 	DisplayInfo();
 	name = candidate_name;
@@ -113,23 +113,23 @@ void Candidate::ModifyInfo(string candidate_name, MYSQL *conn)
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "update candidate set name = '%s' where id = '%s'", name, id);
-	if(mysql_query(conn, sql)){
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+	if(mysql_query(mysql, sql)){
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 
 	DisplayInfo();
 }
 
-void Candidate::Delete(MYSQL *conn)
+void Candidate::Delete(MYSQL *mysql)
 {
 	DisplayInfo();
 
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "delete from candidate where id = '%s'", id);
-	if(mysql_query(conn, sql)){
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+	if(mysql_query(mysql, sql)){
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 }
@@ -139,13 +139,13 @@ void Candidate::DisplayInfo()
 	cout << "Id: " << id << " " << name << endl;
 }
 
-void Candidate::DisplayAllVotes(MYSQL *conn)
+void Candidate::DisplayAllVotes(MYSQL *mysql)
 {
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "select distinct name as elector_name, sum(distinct vote.id) as vote_num from vote where candidate_name = '%s'", name);
-	if(mysql_query(conn, sql)){
-		cout << "ERROR: " << mysql_errno(conn) << mysql_error(conn) << endl;
+	if(mysql_query(mysql, sql)){
+		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
 }
