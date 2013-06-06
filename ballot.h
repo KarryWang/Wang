@@ -6,7 +6,7 @@ class Ballot{
 public:
 	Ballot(string elector_name_, string candidate_name_, MYSQL *mysql);
 	Ballot(string ballot_id, MYSQL *mysql);
-	void ModifyInfo(string candidate_name_, MYSQL *mysql);
+	void ModifyInfo(string new_candidate_name, MYSQL *mysql);
 	void Delete(MYSQL *mysql);
 	void DisplayInfo();
 private:

@@ -85,10 +85,10 @@ Ballot::Ballot(string ballot_id, MYSQL *mysql)
 	cout << "ballot_id: " << id << " " << elector_name << " " << candidate_name << endl;
 }
 
-void Ballot::ModifyInfo(string candidate_name_, MYSQL *mysql)
+void Ballot::ModifyInfo(string new_candidate_name, MYSQL *mysql)
 {
 	DisplayInfo();
-	candidate_name = candidate_name_;
+	candidate_name = new_candidate_name;
 
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));

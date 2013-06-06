@@ -105,10 +105,10 @@ Candidate::Candidate(string candidate_id, MYSQL *mysql)
 	cout << "id: " << id << "name: " << name << endl;
 }
 
-void Candidate::ModifyInfo(string candidate_name, MYSQL *mysql)
+void Candidate::ModifyInfo(string new_candidate_name, MYSQL *mysql)
 {
 	DisplayInfo();
-	name = candidate_name;
+	name = new_candidate_name;
 
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));

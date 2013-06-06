@@ -10,7 +10,7 @@ class Candidate{
 public:
 	Candidate(string candidate_name, MYSQL *mysql);
 	Candidate(string candidate_id, MYSQL *mysql);
-	void ModifyInfo(string candidate_name, MYSQL *mysql);
+	void ModifyInfo(string new_candidate_name, MYSQL *mysql);
 	void Delete(MYSQL *mysql);
 	void DisplayInfo();
 	void DisplayAllVotes(MYSQL *mysql);

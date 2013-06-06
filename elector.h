@@ -2,13 +2,17 @@
 #define ELECTOR_H
 #include<string>
 #include<mysql.h>
+#include<iostream>
+#include"ballot.h"
+using namespace std;
 
 class Elector{
 public:
-	Elector(string id, string name, MYSQL *conn);
-	Elector(string id, MYSQL *conn);
+	Elector(string elector_id, string elector_password, string elector_name, MYSQL *mysql);
+	Elector(string elector_id, MYSQL *mysql);
 private:
 	string id;
+	string password;
 	string name;
 };
 #endif
