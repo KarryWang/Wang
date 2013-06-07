@@ -1,10 +1,17 @@
 #ifndef BALLOT_H
 #define BALLOT_H
+#include<iostream>
+#include<ctime>
+#include<cstdio>
+#include<cstdlib>
 #include<string>
+#include<cstring>
+#include<mysql.h>
+using namespace std;
 
 class Ballot{
 public:
-	Ballot(string elector_name_, string candidate_name_, MYSQL *mysql);
+	Ballot(string temp_elector_name, string temp_candidate_name, MYSQL *mysql);
 	Ballot(string ballot_id, MYSQL *mysql);
 	void ModifyInfo(string new_candidate_name, MYSQL *mysql);
 	void Delete(MYSQL *mysql);
@@ -15,6 +22,7 @@ private:
 	string candidate_name;
 };
 
+const int kMaxCandidateId = 100000000;
 const int kSqlStatementLength = 1000;
 const int kCharArrayLength = 100;
 #endif

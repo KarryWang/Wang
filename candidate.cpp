@@ -3,31 +3,37 @@
 #include<cstdlib>
 #include<cstring>
 #include"candidate.h"
-#include"control.h"
+//#include"control.h"
+
 
 const int kSqlStatementLength = 1000;
 const int kCharArrayLength = 100;
-
+const int kMaxCandidateId = 10000;
 //ok
 Candidate::Candidate(string candidate_name, MYSQL *mysql)
 {
+	int num;
 	while(1){
 		srand((unsigned)time(NULL));//make a new id for candidate
-		id = rand() % MAX_CANDIDATE_ID;
-		cout << id << endl;
+		num = rand() % kMaxCandidateId;
+		cout << num << endl;
 
 		char sql[kSqlStatementLength];
 		memset(sql, 0, sizeof(sql));
-		sprintf(sql, "select * from candidate where id = '%d'", id);
+		sprintf(sql, "select * from candidate where id = '%d'", num);
 		if(mysql_query(mysql, sql)){
 			cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 			exit(false);
 		}
 
 		MYSQL_RES *result = mysql_store_result(mysql);
-		if(mysql_field_count(result) == 0)
+		if(mysql_field_count(mysql) == 0)
 			break;
 	}
+	char temp[kCharArrayLength];
+	memset(temp, 0, sizeof(temp));
+	sprintf(temp, "%d", num);
+	id = temp;
 	name = candidate_name;
 
 
@@ -70,7 +76,7 @@ Candidate::Candidate(string candidate_name, MYSQL *mysql)
 }
 
 //ok
-Candidate::Candidate(string candidate_id, MYSQL *mysql)
+Candidate::Candidate(string candidate_id, int flag, MYSQL *mysql)
 {
 	id = candidate_id;
 
@@ -110,9 +116,20 @@ void Candidate::ModifyInfo(string new_candidate_name, MYSQL *mysql)
 	DisplayInfo();
 	name = new_candidate_name;
 
+	char char_name[kCharArrayLength];
+	memset(char_name, 0, sizeof(char_name));
+	int i = 0;
+	for(string::iterator it = name.begin(); it != name.end(); it++)
+		char_name[i++] = *it;
+	char char_id[kCharArrayLength];
+	memset(char_id, 0, sizeof(char_id));
+	i = 0;
+	for(string::iterator it = name.begin(); it != name.end(); it++)
+		char_id[i++] = *it;
+
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "update candidate set name = '%s' where id = '%s'", name, id);
+	sprintf(sql, "update candidate set name = '%s' where id = '%s'", char_name, char_id);
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
@@ -125,9 +142,14 @@ void Candidate::Delete(MYSQL *mysql)
 {
 	DisplayInfo();
 
+	char char_id[kCharArrayLength];
+	memset(char_id, 0, sizeof(char_id));
+	int i = 0;
+	for(string::iterator it = id.begin(); it != id.end(); it++)
+		char_id[i++] = *it;
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "delete from candidate where id = '%s'", id);
+	sprintf(sql, "delete from candidate where id = '%s'", char_id);
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
@@ -141,9 +163,14 @@ void Candidate::DisplayInfo()
 
 void Candidate::DisplayAllVotes(MYSQL *mysql)
 {
+	char char_name[kCharArrayLength];
+	memset(char_name, 0, sizeof(char_name));
+	int i = 0;
+	for(string::iterator it = id.begin(); it != id.end(); it++)
+		char_name[i++] = *it;
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "select distinct name as elector_name, sum(distinct vote.id) as vote_num from vote where candidate_name = '%s'", name);
+	sprintf(sql, "select distinct name as elector_name, sum(distinct vote.id) as vote_num from vote where candidate_name = '%s'", char_name);
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);

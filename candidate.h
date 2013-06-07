@@ -8,8 +8,9 @@ using namespace std;
 
 class Candidate{
 public:
+	Candidate(){};//
 	Candidate(string candidate_name, MYSQL *mysql);
-	Candidate(string candidate_id, MYSQL *mysql);
+	Candidate(string candidate_id, int flag, MYSQL *mysql);
 	void ModifyInfo(string new_candidate_name, MYSQL *mysql);
 	void Delete(MYSQL *mysql);
 	void DisplayInfo();

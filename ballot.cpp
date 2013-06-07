@@ -1,33 +1,32 @@
 #include"ballot.h"
-#include<ctime>
-#include<cstdlib>
-#include<cstdio>
-#include<string>
-#include<iostream>
-using namespace std;
 
-Ballot::Ballot(string elector_name_, string candidate_name_, MYSQL *mysql)
+Ballot::Ballot(string temp_elector_name, string temp_candidate_name, MYSQL *mysql)
 {
+	int num;
 	while(1){
 		srand((unsigned)time(NULL));//make a new id for candidate
-		id = rand() % MAX_CANDIDATE_ID;
-		cout << id << endl;
+		num = rand() % kMaxCandidateId;
+		cout << num << endl;
 
 		char sql[kSqlStatementLength];
 		memset(sql, 0, sizeof(sql));
-		sprintf(sql, "select * from ballot where id = '%d'", id);
+		sprintf(sql, "select * from ballot where id = '%d'", num);
 		if(mysql_query(mysql, sql)){
 			cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 			exit(false);
 		}
 
 		MYSQL_RES *result = mysql_store_result(mysql);
-		if(mysql_field_count(result) == 0)
+		if(mysql_field_count(mysql) == 0)
 			break;
 	}
 
-	elector_name = elector_name_;
-	candidate_name = candidate_name_;
+	char temp[kCharArrayLength];
+	memset(temp, 0, sizeof(temp));
+	sprintf(temp, "%d", num);
+	id = temp;
+	elector_name = temp_elector_name;
+	candidate_name = temp_candidate_name;
 
 	char char_id[kCharArrayLength];
 	int i = 0;
@@ -38,7 +37,7 @@ Ballot::Ballot(string elector_name_, string candidate_name_, MYSQL *mysql)
 	char char_elector_name[kCharArrayLength];
 	memset(char_elector_name, 0, sizeof(char_elector_name));
 	i = 0;
-	for(string::iterator it = elector_name.begin(); it != elector.end(); it++)
+	for(string::iterator it = elector_name.begin(); it != elector_name.end(); it++)
 		char_elector_name[i++] = *it;
 
 	char char_candidate_name[kCharArrayLength];
@@ -60,9 +59,14 @@ Ballot::Ballot(string elector_name_, string candidate_name_, MYSQL *mysql)
 
 Ballot::Ballot(string ballot_id, MYSQL *mysql)
 {
+	char char_id[kCharArrayLength];
+	memset(char_id, 0, sizeof(char_id));
+	int i = 0;
+	for(string::iterator it = ballot_id.begin(); it != ballot_id.end(); it++)
+		char_id[i++] = *it;
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "select * from ballot where id = '%s'", ballot_id);
+	sprintf(sql, "select * from ballot where id = '%s'", char_id);
 
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
@@ -73,7 +77,7 @@ Ballot::Ballot(string ballot_id, MYSQL *mysql)
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
 		exit(false);
 	}
-	if(mysql_field_count(result) == 0){
+	if(mysql_field_count(mysql) == 0){
 		cout << "There is no this ballot!" << endl;
 		exit(false);
 	}
@@ -90,9 +94,20 @@ void Ballot::ModifyInfo(string new_candidate_name, MYSQL *mysql)
 	DisplayInfo();
 	candidate_name = new_candidate_name;
 
+	char char_name[kCharArrayLength];
+	memset(char_name, 0, sizeof(char_name));
+	int i = 0;
+	for(string::iterator it = new_candidate_name.begin(); it != new_candidate_name.end(); it++)
+		char_name[i++] = *it;
+	char char_id[kCharArrayLength];
+	memset(char_id, 0, sizeof(char_id));
+	i = 0;
+	for(string::iterator it = id.begin(); it != id.end(); it++)
+		char_id[i++] = *it;
+
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "update ballot set candidate_name = '%s' where id = '%s'", candidate_name_, id);
+	sprintf(sql, "update ballot set candidate_name = '%s' where id = '%s'", char_name, char_id);
 
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
@@ -106,9 +121,15 @@ void Ballot::Delete(MYSQL *mysql)
 {
 	DisplayInfo();
 
+	char char_id[kCharArrayLength];
+	memset(char_id, 0, sizeof(char_id));
+	int i = 0;
+	for(string::iterator it = id.begin(); it != id.end(); it++)
+		char_id[i++] = *it;
+
 	char sql[kSqlStatementLength];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "delete from ballot where id = '%s'", id);
+	sprintf(sql, "delete from ballot where id = '%s'", char_id);
 
 	if(mysql_query(mysql, sql)){
 		cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql) << endl;
