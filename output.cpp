@@ -76,6 +76,17 @@ void Output::AddCandidateMenu()
 	cout << "************************" << endl;
 	cout << "Input Candidate name:" << endl;
 }
+void Output::ModifyCandidateMenu()
+{
+	cout << "************************" << endl;
+	cout << "Input Candidate Id:" << endl;
+	cout << "Input new candidate info: " << endl;
+}
+void Output::DeleteCandidateMenu()
+{
+	cout << "************************" << endl;
+	cout << "Input Candidate Id:" << endl;
+}
 void Output::DatabaseError(MYSQL *mysql)
 {
 	cout << "ERROR: " << mysql_errno(mysql) << mysql_error(mysql);

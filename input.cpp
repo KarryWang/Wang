@@ -32,6 +32,10 @@ void Input::CandidateName(string &name)
 	cin >> temp;
 	name = temp;
 }
+void Input::CandidateId(string &id)
+{
+	cin >> id;
+}
 void Input::BallotId(string &id)
 {
 	cin >> id;

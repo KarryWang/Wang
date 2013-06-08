@@ -11,6 +11,7 @@ public:
 	void ChooseCandidate(string &candidate_id);
 	void CandidateInfo(string &name);
 	void CandidateName(string &name);
+	void CandidateId(string &id);
 	void BallotId(string &id);
 	void BallotNewPassword(string &password);
 private:

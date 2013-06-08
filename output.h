@@ -18,6 +18,8 @@ public:
 	
 	void ManagementMenu();
 	void AddCandidateMenu();
+	void ModifyCandidateMenu();
+	void DeleteCandidateMenu();
 	void DatabaseError(MYSQL *mysql);
 	void WrongChoiceError();
 };

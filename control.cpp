@@ -52,27 +52,43 @@ void Control::ElectorSignIntoSystem()
 
 void Control::ManageCandidate()
 {
-	string candidate_name;
-	string candidate_id;
 	while(1){
 		out.ManagementMenu();
 		int choice;
 		in.ChooseChoice(choice);
 		switch(choice){
 			case 1:
-				out.AddCandidateMenu();
-				in.CandidateInfo(candidate_name);
-				Candidate candidate(candidate_name, mysql);
-				break;
+				{
+					string candidate_name;
+					out.AddCandidateMenu();
+					in.CandidateInfo(candidate_name);
+					Candidate candidate(candidate_name, mysql);
+					break;
+				}
 			case 2:
-	//			out.ModifyCandidateMenu();
-	//			in.CandidateId(candidate_id);
-				Candidate can(candidate_id, 1, mysql);
-				break;
+				{
+					string candidate_id;
+					out.ModifyCandidateMenu();
+					in.CandidateId(candidate_id);
+					Candidate can(candidate_id, 1, mysql);
+					string candidate_name;
+					in.CandidateName(candidate_name);
+					can.ModifyInfo(candidate_name, mysql);
+					break;
+				}
 			case 3:
+				{
+					string candidate_id;
+					out.DeleteCandidateMenu();
+					in.CandidateId(candidate_id);
+					Candidate can(candidate_id, 1, mysql);
+					can.Delete(mysql);
+				}
 				break;
 			case 4:
 				break;
+			case 5:
+				return;
 			default:
 				break;
 		}

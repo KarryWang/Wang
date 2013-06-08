@@ -27,7 +27,7 @@ Candidate::Candidate(string candidate_name, MYSQL *mysql)
 		}
 
 		MYSQL_RES *result = mysql_store_result(mysql);
-		if(mysql_field_count(mysql) == 0)
+		if(mysql_num_rows(result) == 0)
 			break;
 	}
 	char temp[kCharArrayLength];
@@ -108,7 +108,7 @@ Candidate::Candidate(string candidate_id, int flag, MYSQL *mysql)
 	row = mysql_fetch_row(result);
 	id = row[0];
 	name = row[1];
-	cout << "id: " << id << "name: " << name << endl;
+//	cout << "id: " << id << "name: " << name << endl;
 }
 
 void Candidate::ModifyInfo(string new_candidate_name, MYSQL *mysql)
